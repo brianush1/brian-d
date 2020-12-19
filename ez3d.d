@@ -697,6 +697,10 @@ struct Matrix4 {
 		return Matrix4(M);
 	}
 
+	string toString() const {
+		return "(" ~ m[0].to!string ~ "\n" ~ m[1].to!string ~ "\n" ~ m[2].to!string ~ "\n" ~ m[3].to!string ~ ")";
+	}
+
 }
 
 /** An exception thrown when an invalid mesh file is loaded */
