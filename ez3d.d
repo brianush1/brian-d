@@ -404,14 +404,18 @@ struct Matrix4 {
 	Matrix4 withForward(Vector3 value, Vector3 up = Vector3(0, 1, 0)) const {
 		if (value.magnitude == 0)
 			return Matrix4(translation);
+		if (value.unit == up.unit)
+			return Matrix4(translation) * Matrix4.angles(PI_2, 0, 0);
+		if (value.unit == -up.unit)
+			return Matrix4(translation) * Matrix4.angles(-PI_2, 0, 0);
 		Vector3 forward = value.unit;
-		Vector3 vx = forward.cross(up.unit);
-		Vector3 vy = vx.cross(forward);
-		Vector3 vz = vx.cross(vy);
+		Vector3 right = forward.cross(up.unit);
+		Vector3 up2 = right.cross(forward);
+		Vector3 forward2 = right.cross(up2);
 		return Matrix4(translation) * Matrix4([
-			[vx.x, vy.x, vz.x, 0],
-			[vx.y, vy.y, vz.y, 0],
-			[vx.z, vy.z, vz.z, 0],
+			[right.x, up2.x, forward2.x, 0],
+			[right.y, up2.y, forward2.y, 0],
+			[right.z, up2.z, forward2.z, 0],
 			[0, 0, 0, 1.0],
 		]);
 	}
