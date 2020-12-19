@@ -53,6 +53,11 @@ struct Vector2 {
 		return mixin("Vector2(x" ~ op ~ "other, y" ~ op ~ "other)");
 	}
 
+	/** Applies the given operator onto each component in the vector */
+	Vector2 opUnary(string op)() const {
+		return mixin("Vector2(" ~ op ~ "x, " ~ op ~ "y)");
+	}
+
 	void opOpAssign(string op)(Vector2 other) {
 		mixin("x" ~ op ~ "=other.x;");
 		mixin("y" ~ op ~ "=other.y;");
@@ -112,6 +117,11 @@ struct Vector3 {
 	/** Applies the given operator onto each component in the vector and the given value */
 	Vector3 opBinary(string op)(double other) const {
 		return mixin("Vector3(x" ~ op ~ "other, y" ~ op ~ "other, z" ~ op ~ " other)");
+	}
+
+	/** Applies the given operator onto each component in the vector */
+	Vector3 opUnary(string op)() const {
+		return mixin("Vector3(" ~ op ~ "x, " ~ op ~ "y, " ~ op ~ "z)");
 	}
 
 	void opOpAssign(string op)(Vector3 other) {
@@ -275,7 +285,12 @@ struct Vector4 {
 				~ " other, w" ~ op ~ " other)");
 	}
 
-	void opOpAssign(string op)(Vector3 other) {
+	/** Applies the given operator onto each component in the vector */
+	Vector4 opUnary(string op)() const {
+		return mixin("Vector4(" ~ op ~ "x, " ~ op ~ "y, " ~ op ~ "z, " ~ op ~ "w)");
+	}
+
+	void opOpAssign(string op)(Vector4 other) {
 		mixin("x" ~ op ~ "=other.x;");
 		mixin("y" ~ op ~ "=other.y;");
 		mixin("z" ~ op ~ "=other.z;");
