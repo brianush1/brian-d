@@ -1,0 +1,3 @@
+#!/bin/sh
+
+rdmd -i -I=.. -I=. $@_demo.d
