@@ -1904,6 +1904,11 @@ static if (Windowing) {
 		private Vector2 lockStart;
 		private bool lockedCursor;
 
+		/** Determines whether or not the cursor is currently locked */
+		bool cursorLocked() const @property {
+			return lockedCursor;
+		}
+
 		/** Hides and locks the cursor to the window; the cursor position will continue updating, but it will not be bounded to the size of the window any longer */
 		void lockCursor() {
 			if (lockedCursor)
