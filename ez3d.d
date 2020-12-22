@@ -1902,7 +1902,8 @@ static if (Windowing) {
 		}
 
 		private Vector2 lockStart;
-		private bool lockedCursor;
+		bool lockedCursor;
+		bool pauseEvents;
 
 		/** Determines whether or not the cursor is currently locked */
 		bool cursorLocked() const @property {
@@ -1911,22 +1912,33 @@ static if (Windowing) {
 
 		/** Hides and locks the cursor to the window; the cursor position will continue updating, but it will not be bounded to the size of the window any longer */
 		void lockCursor() {
-			if (lockedCursor)
+			if (lockedCursor || pauseEvents)
 				return;
-			lockedCursor = true;
+			pauseEvents = true;
+			scope (exit)
+				pauseEvents = false;
 			lockStart = _cursorPos;
 			win.hideCursor();
+			bool warped = win.warpMouse(win.width / 2, win.height / 2);
+			assert(warped); // TODO: PR an implementation for Windows in sdpy
 			win.grabInput(true, true, true);
+			lockedCursor = true;
 		}
 
 		/** Unlocks the cursor */
 		void unlockCursor() {
-			if (!lockedCursor)
+			if (!lockedCursor || pauseEvents)
 				return;
+			pauseEvents = true;
+			scope (exit)
+				pauseEvents = false;
 			lockedCursor = false;
+			auto prevPos = _cursorPos;
+			_cursorPos = lockStart;
 			win.warpMouse(cast(int) lockStart.x, cast(int) lockStart.y);
 			win.showCursor();
 			win.releaseInputGrab();
+			if (onMouseMove) onMouseMove(prevPos, _cursorPos);
 		}
 
 		private void eventLoop() {
@@ -1947,6 +1959,9 @@ static if (Windowing) {
 				}
 				win.redrawOpenGlSceneNow;
 			}, delegate(sdpy.KeyEvent ev) {
+				if (pauseEvents)
+					return;
+
 				auto maybeKey = ev.key.fromSdpyKey;
 				if (maybeKey.isNull)
 					return;
@@ -1965,6 +1980,9 @@ static if (Windowing) {
 					if (onKeyRelease) onKeyRelease(key, modifiers);
 				}
 			}, delegate(sdpy.MouseEvent ev) {
+				if (pauseEvents)
+					return;
+
 				if (ev.type == sdpy.MouseEventType.motion) {
 
 					Vector2 pos = Vector2(ev.x, ev.y);
