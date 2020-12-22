@@ -1483,8 +1483,14 @@ static if (__traits(compiles, () { import arsd.simpledisplay; })) {
 	private enum _UseSDPY = true;
 	private enum _Windowing = true;
 }
+else {
+	private enum _Windowing = false;
+}
 
-static if (_Windowing) {
+/** Determines whether or not a windowing library is available for use in ez3d's $(REF GameWindow). */
+enum Windowing = _Windowing;
+
+static if (Windowing) {
 	enum DisplayLibrary {
 		SimpleDisplay,
 	}
