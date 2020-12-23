@@ -1013,7 +1013,7 @@ private struct OpenGLBackend {
 		if (gl is null) {
 			bool success = .loadGL();
 			if (!success) {
-				throw new Exception("Could not load OpenGL"); // TODO: better error handling
+				throw new Exception("Could not load OpenGL");
 			}
 		}
 		glCount++;
@@ -1461,7 +1461,7 @@ private struct OpenGLBackend {
 					vertices[j++] = cast(gl.Float) v.uv.y;
 				}
 			}
-			gl.bufferData(gl.ARRAY_BUFFER, gl.Float.sizeof * mesh.vertices.length * stride, vertices.ptr, gl.STATIC_DRAW); // TODO: check bufferData doc gen
+			gl.bufferData(gl.ARRAY_BUFFER, gl.Float.sizeof * mesh.vertices.length * stride, vertices.ptr, gl.STATIC_DRAW);
 
 			gl.bindBuffer(gl.ELEMENT_ARRAY_BUFFER, ebo);
 			gl.UInt[] faces = new gl.UInt[mesh.faces.length * 3];
@@ -1584,7 +1584,7 @@ static if (Windowing) {
 			case sdpy.Key.LeftBracket: return Nullable!KeyCode(KeyCode.LeftBracket);
 			case sdpy.Key.Backslash: return Nullable!KeyCode(KeyCode.Backslash);
 			case sdpy.Key.RightBracket: return Nullable!KeyCode(KeyCode.RightBracket);
-			case sdpy.Key.Grave: return Nullable!KeyCode(KeyCode.Backtick); // TODO: check this one
+			case sdpy.Key.Grave: return Nullable!KeyCode(KeyCode.Backtick);
 			case sdpy.Key.Escape: return Nullable!KeyCode(KeyCode.Escape);
 			case sdpy.Key.Enter: return Nullable!KeyCode(KeyCode.Enter);
 			case sdpy.Key.Tab: return Nullable!KeyCode(KeyCode.Tab);
@@ -1920,7 +1920,7 @@ static if (Windowing) {
 			lockStart = _cursorPos;
 			win.hideCursor();
 			bool warped = win.warpMouse(win.width / 2, win.height / 2);
-			assert(warped); // TODO: PR an implementation for Windows in sdpy
+			assert(warped);
 			win.grabInput(true, true, true);
 			lockedCursor = true;
 		}
